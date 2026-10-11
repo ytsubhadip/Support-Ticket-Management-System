@@ -1,17 +1,21 @@
 from fastapi import FastAPI, HTTPException, Depends
 from database import engine, Base
 from models.user import User
+from models.ticket import Ticket
 from utils.auth import get_current_user, require_roles
 
 from routes.auth import router as auth_route
+from routes.tickets import router as ticket_route
 
-
-
-app = FastAPI(title="Helpdesk Ticket Management System")
+app = FastAPI(title="Helpdesk Ticket Management System",
+              swagger_ui_parameters={
+                  "persistAuthorization": True
+              })
 Base.metadata.create_all(bind=engine)
 
 # routes
 app.include_router(auth_route)
+app.include_router(ticket_route)
 
 @app.get("/")
 def root():

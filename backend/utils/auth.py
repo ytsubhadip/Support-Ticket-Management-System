@@ -13,6 +13,7 @@ from utils.security import SECRET_KEY, ALGORITHM
 bearer_scheme = HTTPBearer()
 
 
+# get currect users
 def get_current_user(
         credentials : HTTPAuthorizationCredentials = Depends(bearer_scheme),
         db : Session= Depends(get_db)
@@ -53,6 +54,7 @@ def get_current_user(
     return user
 
 
+# check current user role
 def require_roles(*allowed_roles: str):
     def role_checker(current_user: User = Depends(get_current_user)) -> User:
         if current_user.role not in allowed_roles:
