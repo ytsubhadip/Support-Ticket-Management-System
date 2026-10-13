@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Link, useAsyncValue, useNavigate } from "react-router-dom";
-import api
-    from "../../services/api";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../../services/api";
+import "./Login.css"
 
 function Login() {
 
@@ -22,7 +22,7 @@ function Login() {
         });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         setError("");
         setLoading(true);
@@ -30,14 +30,14 @@ function Login() {
         try {
             const response = await api.post("/auth/login", form);
 
-            const { access_token, token_type } = response.data;
+            const { auth_token, token_type } = response.data;
 
-            if (!access_token) {
+            if (!auth_token) {
                 throw new Error("Access token was not returned by the server.");
             }
 
-            localStorage.setItem("access_token", access_token);
-            localStorage.setItem("toekn_type", token_type || "bearer");
+            localStorage.setItem("access_token", auth_token);
+            localStorage.setItem("token_type", token_type || "bearer");
 
             navigate("/dashboard", { replace: true });
 
@@ -60,7 +60,7 @@ function Login() {
             <form className="auth-card" onSubmit={handleSubmit}>
                 <h1>Login</h1>
 
-                {error & <div className="errorMessage"> {error}</div>}
+                {error && <div className="error-message " role="alert">{error}</div>}
 
                 <label htmlFor="email" >Email</label>
                 <input
