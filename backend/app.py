@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 from models.user import User
 from models.ticket import Ticket
@@ -11,6 +12,19 @@ app = FastAPI(title="Helpdesk Ticket Management System",
               swagger_ui_parameters={
                   "persistAuthorization": True
               })
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 Base.metadata.create_all(bind=engine)
 
 # routes

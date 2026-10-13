@@ -66,6 +66,11 @@ async def create_ticket(
         created_by = current_user.id
     )
 
+    if not ticket:
+        raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST
+        )
+
     db.add(ticket)
     db.commit()
     db.refresh(ticket)
@@ -79,7 +84,7 @@ async def create_ticket(
 async def list_tickets(
     serch : str |None = Query(default=None, max_length=200),
     category : Literal[
-        "Technica", "Billing", "Account", "Subscription","Other"]| None =None,
+        "Technical", "Billing", "Account", "Subscription","Other"]| None =None,
     priority : Literal["Low", "Medium","High","Urgent"]| None = None,
     ticket_status : Literal[
         "Open", "In Process","Waiting for User", "Resolved", "Closed"] |None =Query(default=None, alias="status"),
@@ -150,10 +155,10 @@ async def update_ticket(
 
     ticket = get_accessible_ticket(ticket_id, current_user, db)
 
-    is_creator = bool(ticket.created_by == current_user.id)
-    is_admin = bool(current_user.role == "admin")
+    is_creator = ticket.created_by == current_user.id
+    is_admin = current_user.role == "admin"
 
-    if (is_creator or is_admin):
+    if is_creator or is_admin:
         raise HTTPException(
             status_code=403,
             detail="Only the ticket creator or admin edit the thicket details"
@@ -292,7 +297,7 @@ async def assign_ticket(
 # delete ticket Admin only
 @router.delete(
     "/{ticket_id}",
-    status_code=status.HTTP_204_NO_content
+    status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_Ticket(
     ticket_id : UUID,

@@ -30,7 +30,7 @@ async def user_register(user_data: UserCreate, db: Session = Depends(get_db)):
         name = user_data.name,
         email = email,
         password = hash_passowrd(user_data.password),
-        role = "user"
+        role = user_data.role
     )
 
     try:

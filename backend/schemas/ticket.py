@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 TicketCategory = Literal[
-    "Technica",
+    "Technical",
     "Billing",
     "Account",
     "Subscription",

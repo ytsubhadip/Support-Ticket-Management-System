@@ -11,7 +11,7 @@ class Ticket(Base):
 
     __table_args__ =(
         CheckConstraint(
-            "category IN('Technica', 'Billing', 'Account', 'Subscription', 'Other')",
+            "category IN('Technical', 'Billing', 'Account', 'Subscription', 'Other')",
             name= "check_ticket_category",
         ),
         CheckConstraint(
