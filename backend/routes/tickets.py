@@ -127,6 +127,29 @@ async def list_tickets(
         .all()
     )
 
+@router.get("/assigned", response_model=list[TicketResponse])
+async def get_assigned_tickets(
+    db:Session =Depends(get_db),
+    current_user:User = Depends(get_current_user)
+):
+    # Only support agent can access this endpoint
+
+    if str(current_user.role) != "support_agent":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="only support agent can view assigned tickets"
+        )
+
+    tickets = (
+        db.query(Ticket)
+        .filter(
+            Ticket.assigned_to == current_user.id
+        )
+        .order_by(Ticket.created_at.desc())
+        .all()
+    )
+
+    return tickets
 
 # get one ticket
 @router.get(
@@ -158,7 +181,7 @@ async def update_ticket(
     is_creator = ticket.created_by == current_user.id
     is_admin = current_user.role == "admin"
 
-    if is_creator or is_admin:
+    if not bool(is_creator or is_admin):
         raise HTTPException(
             status_code=403,
             detail="Only the ticket creator or admin edit the thicket details"
@@ -169,6 +192,7 @@ async def update_ticket(
             status_code=status.HTTP_409_CONFLICT,
             detail="Only open thick will edit"
         )
+    
     updates = tickeet_date.model_dump(exclude_unset=True)
 
     if not updates:
@@ -186,7 +210,7 @@ async def update_ticket(
     for field , value in updates.items():
         setattr(ticket, field, value)
 
-    db.commit()
+    db.commit() 
     db.refresh(ticket)
 
     return ticket
@@ -253,6 +277,13 @@ async def assign_ticket(
     db : Session = Depends(get_db),
     current_user : User = Depends(get_current_user)
 ):
+
+    if str(current_user.role) != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only admin can asign tickets"
+        )
+    
     ticket = (
         db.query(Ticket)
         .filter(Ticket.id == ticket_id)
@@ -302,7 +333,7 @@ async def assign_ticket(
 async def delete_Ticket(
     ticket_id : UUID,
     db:Session = Depends(get_db),
-    current_user : User =Depends(require_roles("admin"))
+    current_user : User =Depends(require_roles("admin", "user"))
 ):
     ticket = (
         db.query(Ticket)
@@ -320,3 +351,5 @@ async def delete_Ticket(
     db.commit()
 
     return None
+
+

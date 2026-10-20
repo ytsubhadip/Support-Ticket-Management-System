@@ -85,9 +85,12 @@ async def user_login(user_data: UserLogin,db:Session =Depends(get_db)):
     return({
         "auth_token": access_token,
         "token_type":"bearer",
-        "name": user.name,
-        "email":user.email,
-        "role":user.is_active,
-        "is_active":user.is_active,
-        "created_at":user.created_at
+        "user":{
+             "name": user.name,
+             "email":user.email,
+             "role":user.role,
+             "is_active":user.is_active,
+             "created_at":user.created_at
+        }
+       
     })
