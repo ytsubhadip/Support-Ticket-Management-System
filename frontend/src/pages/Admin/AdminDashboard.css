@@ -1,0 +1,205 @@
+.admin-dashboard-page {
+  min-height: calc(100vh - 70px);
+  background: #f8fafc;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.admin-dashboard-header {
+  max-width: 1400px;
+  margin: 0 auto 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.admin-dashboard-header h1 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.admin-dashboard-header p {
+  margin: 7px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+.admin-dashboard-refresh {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+
+  background: white;
+  color: #334155;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-dashboard-refresh:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* =====================================================
+   Task Cards
+   ===================================================== */
+
+.admin-task-cards {
+  max-width: 1400px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 18px;
+}
+
+.admin-task-card {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 24px;
+
+  background: white;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.admin-task-icon {
+  width: 52px;
+  height: 52px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+}
+
+.admin-task-icon.total {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.admin-task-icon.pending {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.admin-task-icon.completed {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.admin-task-card span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #64748b;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-task-card strong {
+  display: block;
+
+  color: #172033;
+
+  font-size: 30px;
+  font-weight: 700;
+}
+
+/* =====================================================
+   Loading
+   ===================================================== */
+
+.admin-dashboard-loading {
+  min-height: 50vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  color: #64748b;
+
+  font-size: 15px;
+}
+
+.admin-dashboard-spinner {
+  animation: adminDashboardSpin 1s linear infinite;
+}
+
+@keyframes adminDashboardSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================
+   Responsive
+   ===================================================== */
+
+@media (max-width: 800px) {
+  .admin-dashboard-page {
+    padding: 24px 18px;
+  }
+
+  .admin-task-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-dashboard-page {
+    padding: 20px 12px;
+  }
+
+  .admin-dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-dashboard-header h1 {
+    font-size: 23px;
+  }
+
+  .admin-dashboard-refresh {
+    width: 100%;
+    justify-content: center;
+  }
+}

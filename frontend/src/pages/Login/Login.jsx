@@ -30,7 +30,7 @@ function Login() {
         try {
             const response = await api.post("/auth/login", form);
 
-            const { auth_token, token_type } = response.data;
+            const { auth_token, token_type, user } = response.data;
 
             if (!auth_token) {
                 throw new Error("Access token was not returned by the server.");
@@ -38,8 +38,22 @@ function Login() {
 
             localStorage.setItem("access_token", auth_token);
             localStorage.setItem("token_type", token_type || "bearer");
+            localStorage.setItem("user", JSON.stringify(user));
 
-            navigate("/dashboard", { replace: true });
+            if (response.data.user.role === "admin"){
+                 navigate("/admin/tickets", { replace: true });
+
+            }
+            
+            else if(response.data.user.role === "support_agent"){
+                
+                navigate("/support/dashboard", { replace: true });
+            }
+
+            else{
+
+                navigate("/dashboard", { replace: true });
+            }
 
         } catch (err) {
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Ticket, Trash2, RefreshCw } from "lucide-react";
 import api from "../../services/api";
-import "./Dashboard.css";
+import "./Tickets.css";
 
 const initialForm = {
   title: "",
@@ -20,6 +20,13 @@ function Tickets() {
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [editingTicket, setEditingTicket] = useState(null);
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    category: "Technical",
+    priority: "Medium",
+  });
 
   const loadTickets = async () => {
     setLoading(true);
@@ -38,7 +45,7 @@ function Tickets() {
     } catch (err) {
       setError(
         err.response?.data?.detail ||
-          "Could not load tickets. Please try again."
+        "Could not load tickets. Please try again."
       );
     } finally {
       setLoading(false);
@@ -55,6 +62,17 @@ function Tickets() {
       [e.target.name]: e.target.value,
     }));
   };
+
+  const handleEditClick = (ticket) => {
+    setEditingTicket(ticket);
+
+    setEditForm({
+      title: ticket.title || "",
+      description: ticket.description || "",
+      category: ticket.category || "Technical",
+      priority: ticket.priority || "Medium"
+    });
+  }
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -77,12 +95,51 @@ function Tickets() {
     } catch (err) {
       setError(
         err.response?.data?.detail ||
-          "Could not create ticket. Please check your details."
+        "Could not create ticket. Please check your details."
       );
     } finally {
       setCreating(false);
     }
   };
+
+const handleEditChange = (e) => {
+  setEditForm({
+    ...editForm,
+    [e.target.name]: e.target.value,
+  });
+};
+
+  const handleUpdateTicket = async (e) => {
+    e.preventDefault();
+
+    if (!editingTicket) return;
+
+    try {
+      await api.patch(
+        `/tickets/${editingTicket.id}`,
+        editForm
+      );
+
+      alert("Ticket update successfully");
+      setEditingTicket(null);
+
+      // reload tickts
+      loadTickets();
+    } catch (error) {
+      console.error("Update ticket error:", error);
+
+      alert(
+        error.response?.data?.detail ||
+        "Failed to update ticket"
+      );
+
+    }
+
+
+
+
+  }
+
 
   const handleDelete = async (ticketId) => {
     const confirmed = window.confirm(
@@ -105,7 +162,7 @@ function Tickets() {
     } catch (err) {
       setError(
         err.response?.data?.detail ||
-          "Could not delete ticket. Check your permissions."
+        "Could not delete ticket. Check your permissions."
       );
     }
   };
@@ -117,9 +174,6 @@ function Tickets() {
     <div className="tickets-page">
       <header className="tickets-header">
         <div>
-          <Link to="/dashboard" className="back-link">
-            ← Dashboard
-          </Link>
           <h1>My Tickets</h1>
           <p>Create and manage your support requests.</p>
         </div>
@@ -304,19 +358,189 @@ function Tickets() {
                     </td>
 
                     <td>
-                      <button
-                        className="delete-button"
-                        onClick={() => handleDelete(ticket.id)}
-                        aria-label={`Delete ${ticket.title}`}
-                        title="Delete ticket"
-                      >
-                        <Trash2 size={17} />
-                      </button>
+                      <div className="ticket-actions">
+
+                        <button
+                          className="ticket-edit-button"
+                          onClick={() => handleEditClick(ticket)}
+                          title="Edit ticket"
+                        >
+                          ✏️
+                        </button>
+
+                        <button
+                          className="ticket-delete-button"
+                          onClick={() => handleDelete(ticket.id)}
+                          title="Delete ticket"
+                        >
+                          <Trash2 size={17} />
+                        </button>
+
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {editingTicket && (
+          <div className="edit-modal-overlay">
+
+            <div className="edit-modal">
+
+              <div className="edit-modal-header">
+                <div>
+                  <h2>Edit Ticket</h2>
+                  <p>Update your ticket details.</p>
+                </div>
+
+                <button
+                  className="edit-modal-close"
+                  onClick={() => setEditingTicket(null)}
+                >
+                  ×
+                </button>
+              </div>
+
+
+              <form onSubmit={handleUpdateTicket}>
+
+                {/* Title */}
+
+                <div className="form-group">
+
+                  <label htmlFor="edit-title">
+                    Title
+                  </label>
+
+                  <input
+                    id="edit-title"
+                    type="text"
+                    name="title"
+                    value={editForm.title}
+                    onChange={handleEditChange}
+                    required
+                  />
+
+                </div>
+
+
+                {/* Description */}
+
+                <div className="form-group">
+
+                  <label htmlFor="edit-description">
+                    Description
+                  </label>
+
+                  <textarea
+                    id="edit-description"
+                    name="description"
+                    value={editForm.description}
+                    onChange={handleEditChange}
+                    rows="5"
+                    required
+                  />
+
+                </div>
+
+
+                {/* Category */}
+
+                <div className="form-group">
+
+                  <label htmlFor="edit-category">
+                    Category
+                  </label>
+
+                  <select
+                    id="edit-category"
+                    name="category"
+                    value={editForm.category}
+                    onChange={handleEditChange}
+                  >
+                    <option value="Technical">
+                      Technical
+                    </option>
+
+                    <option value="Billing">
+                      Billing
+                    </option>
+
+                    <option value="Account">
+                      Account
+                    </option>
+
+                    <option value="General">
+                      General
+                    </option>
+                  </select>
+
+                </div>
+
+
+                {/* Priority */}
+
+                <div className="form-group">
+
+                  <label htmlFor="edit-priority">
+                    Priority
+                  </label>
+
+                  <select
+                    id="edit-priority"
+                    name="priority"
+                    value={editForm.priority}
+                    onChange={handleEditChange}
+                  >
+                    <option value="Low">
+                      Low
+                    </option>
+
+                    <option value="Medium">
+                      Medium
+                    </option>
+
+                    <option value="High">
+                      High
+                    </option>
+
+                    <option value="Critical">
+                      Critical
+                    </option>
+
+                  </select>
+
+                </div>
+
+
+                {/* Buttons */}
+
+                <div className="edit-modal-actions">
+
+                  <button
+                    type="button"
+                    className="edit-cancel-button"
+                    onClick={() => setEditingTicket(null)}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="edit-save-button"
+                  >
+                    Save Changes
+                  </button>
+
+                </div>
+
+              </form>
+
+            </div>
+
           </div>
         )}
       </section>
