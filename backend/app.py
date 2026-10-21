@@ -8,6 +8,8 @@ from utils.auth import get_current_user, require_roles
 from routes.auth import router as auth_route
 from routes.tickets import router as ticket_route
 from routes.users import router as users
+from routes.ticket_message import router as ticket_message
+
 
 app = FastAPI(title="Helpdesk Ticket Management System",
               swagger_ui_parameters={
@@ -32,6 +34,7 @@ Base.metadata.create_all(bind=engine)
 app.include_router(auth_route)
 app.include_router(ticket_route)
 app.include_router(users)
+app.include_router(ticket_message)
 
 @app.get("/")
 def root():

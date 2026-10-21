@@ -55,3 +55,29 @@ class TicketUpdate(BaseModel):
 
 class TicketStatusUpdate(BaseModel):
     status : TicketStatus
+
+class TicketMessageCreate(BaseModel):
+    message:str
+
+class TicketMessageResponse(BaseModel):
+    id:UUID
+    ticket_id:UUID
+    sender_id:UUID
+    sender_role:str
+    message:str
+    created_at:datetime
+
+    model_config= ConfigDict(from_attributes=True)
+
+
+class TicketMessageAttachmentResponse(BaseModel):
+    id:UUID
+    message_id: UUID
+    filename: str
+    mime_type:str
+    file_size:int
+    created_at:datetime
+
+    model_config=ConfigDict(from_attributes=True)
+    
+
