@@ -1,0 +1,551 @@
+/* =========================================
+   Ticket Details / Conversation - Light Theme
+========================================= */
+
+.ticket-details-page {
+  min-height: calc(100vh - 68px);
+  padding: 36px 32px 60px;
+  box-sizing: border-box;
+  background: var(--bg-page, #f8fafc);
+  color: var(--text-main, #0f172a);
+}
+
+/* Header */
+.ticket-details-header {
+  max-width: 900px;
+  margin: 0 auto 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.back-to-tickets {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-600, #2563eb);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  width: fit-content;
+  padding: 6px 12px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  transition: var(--transition, all 0.2s ease);
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(15, 23, 42, 0.04));
+}
+
+.back-to-tickets:hover {
+  background: var(--primary-50, #eff6ff);
+  border-color: var(--primary-200, #bfdbfe);
+  transform: translateX(-2px);
+}
+
+.ticket-details-header h1 {
+  margin: 6px 0 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main, #0f172a);
+}
+
+.ticket-details-header p {
+  margin: 0;
+  color: var(--text-muted, #64748b);
+  font-size: 13px;
+  font-family: monospace;
+  background: var(--bg-subtle, #f1f5f9);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm, 6px);
+  width: fit-content;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+}
+
+/* Alerts */
+.ticket-alert {
+  max-width: 900px;
+  margin: 0 auto 24px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md, 10px);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.error-alert {
+  color: var(--danger-text, #b91c1c);
+  background: var(--danger-bg, #fef2f2);
+  border: 1px solid var(--danger-border, #fecaca);
+}
+
+/* =========================================
+   Conversation Card
+========================================= */
+
+.conversation-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(15, 23, 42, 0.05));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.conversation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-light, #f1f5f9);
+  background: #ffffff;
+}
+
+.conversation-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.conversation-refresh-button {
+  padding: 8px 14px;
+  background: var(--bg-subtle, #f1f5f9);
+  border: 1px solid var(--border-strong, #cbd5e1);
+  border-radius: var(--radius-md, 8px);
+  color: var(--text-secondary, #334155);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition, all 0.2s ease);
+}
+
+.conversation-refresh-button:hover:not(:disabled) {
+  background: #ffffff;
+  border-color: var(--primary-400, #60a5fa);
+  color: var(--primary-600, #2563eb);
+}
+
+.conversation-refresh-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Message Feed */
+.conversation-messages {
+  padding: 24px;
+  min-height: 320px;
+  max-height: 520px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fafbfc;
+}
+
+.conversation-empty {
+  margin: auto;
+  text-align: center;
+  color: var(--text-muted, #64748b);
+  font-size: 14px;
+  padding: 40px 20px;
+}
+
+/* Individual Message Bubble */
+.conversation-message {
+  padding: 16px 18px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(15, 23, 42, 0.04));
+  transition: transform 0.15s ease;
+}
+
+.conversation-message:hover {
+  border-color: var(--border-strong, #cbd5e1);
+}
+
+.message-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.message-meta strong {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill, 9999px);
+  background: var(--primary-50, #eff6ff);
+  color: var(--primary-700, #1d4ed8);
+  border: 1px solid var(--primary-200, #bfdbfe);
+}
+
+.message-meta span {
+  font-size: 12px;
+  color: var(--text-light, #94a3b8);
+}
+
+.message-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary, #334155);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* =========================================
+   Existing Attachments Section
+========================================= */
+
+.ticket-attachments {
+  padding: 18px 24px;
+  background: #fbfcfe;
+  border-top: 1px solid var(--border-subtle, #e2e8f0);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ticket-attachments h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #64748b);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ticket-attachment-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(15, 23, 42, 0.03));
+  transition: var(--transition, all 0.2s ease);
+}
+
+.ticket-attachment-item:hover {
+  border-color: var(--primary-300, #93c5fd);
+  box-shadow: var(--shadow-sm, 0 2px 5px rgba(15, 23, 42, 0.06));
+  transform: translateY(-1px);
+}
+
+.ticket-attachment-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.ticket-attachment-info > svg {
+  flex-shrink: 0;
+  color: var(--primary-600, #2563eb);
+  background: var(--primary-50, #eff6ff);
+  padding: 8px;
+  border-radius: var(--radius-md, 8px);
+  width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+  border: 1px solid var(--primary-200, #bfdbfe);
+  transition: var(--transition, all 0.2s ease);
+}
+
+.ticket-attachment-item:hover .ticket-attachment-info > svg {
+  background: var(--primary-100, #dbeafe);
+  transform: scale(1.05);
+}
+
+.ticket-attachment-info > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ticket-attachment-info strong {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 480px;
+}
+
+.ticket-attachment-info small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted, #64748b);
+  margin-top: 2px;
+}
+
+.attachment-download-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: var(--bg-subtle, #f1f5f9);
+  border: 1px solid var(--border-strong, #cbd5e1);
+  border-radius: var(--radius-md, 8px);
+  color: var(--text-secondary, #334155);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: var(--transition, all 0.2s ease);
+}
+
+.attachment-download-button:hover {
+  background: var(--primary-50, #eff6ff);
+  border-color: var(--primary-300, #93c5fd);
+  color: var(--primary-700, #1d4ed8);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(37, 99, 235, 0.08));
+}
+
+.attachment-download-button:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   Form Composer & Attachment Controls
+========================================= */
+
+.message-form {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border-light, #f1f5f9);
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.message-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1.5px solid var(--border-strong, #cbd5e1);
+  border-radius: var(--radius-md, 10px);
+  background: #ffffff;
+  color: var(--text-main, #0f172a);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  outline: none;
+  resize: vertical;
+  transition: var(--transition, all 0.2s ease);
+}
+
+.message-form textarea:focus {
+  border-color: var(--primary-600, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.message-form textarea::placeholder {
+  color: var(--text-light, #94a3b8);
+}
+
+/* Selected File Preview Chip */
+.selected-file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  background: var(--primary-50, #eff6ff);
+  border: 1px solid var(--primary-200, #bfdbfe);
+  border-radius: var(--radius-md, 10px);
+  gap: 12px;
+  animation: fileFadeIn 0.2s ease-out;
+}
+
+@keyframes fileFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selected-file-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.selected-file-info svg {
+  color: var(--primary-600, #2563eb);
+  flex-shrink: 0;
+}
+
+.selected-file-info span {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--primary-900, #1e3a8a);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 520px;
+}
+
+.selected-file button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: var(--radius-sm, 6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition, all 0.15s ease);
+  flex-shrink: 0;
+}
+
+.selected-file button:hover:not(:disabled) {
+  background: var(--danger-bg, #fef2f2);
+  color: var(--danger-text, #dc2626);
+}
+
+.selected-file button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Form Actions Row */
+.message-form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.attach-file-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--bg-card, #ffffff);
+  border: 1.5px solid var(--border-strong, #cbd5e1);
+  border-radius: var(--radius-md, 10px);
+  color: var(--text-secondary, #334155);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition, all 0.2s ease);
+  user-select: none;
+}
+
+.attach-file-button:hover {
+  background: var(--primary-50, #eff6ff);
+  border-color: var(--primary-400, #60a5fa);
+  color: var(--primary-600, #2563eb);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(15, 23, 42, 0.05));
+}
+
+.attach-file-button:active {
+  transform: translateY(0);
+}
+
+.attach-file-button svg {
+  color: var(--primary-600, #2563eb);
+}
+
+.message-form textarea:disabled ~ .message-form-actions .attach-file-button {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.send-message-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--radius-md, 10px);
+  background: var(--primary-600, #2563eb);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition, all 0.2s ease);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.send-message-button:hover:not(:disabled) {
+  background: var(--primary-700, #1d4ed8);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+.send-message-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.send-message-button:disabled {
+  background: var(--border-strong, #cbd5e1);
+  color: #ffffff;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   Responsive
+========================================= */
+
+@media (max-width: 650px) {
+  .ticket-details-page {
+    padding: 24px 16px 40px;
+  }
+
+  .conversation-header,
+  .conversation-messages,
+  .ticket-attachments,
+  .message-form {
+    padding: 16px;
+  }
+
+  .ticket-attachment-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .attachment-download-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .message-form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .attach-file-button,
+  .send-message-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .selected-file-info span {
+    max-width: 220px;
+  }
+}

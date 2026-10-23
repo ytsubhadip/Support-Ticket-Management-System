@@ -102,12 +102,12 @@ function Tickets() {
     }
   };
 
-const handleEditChange = (e) => {
-  setEditForm({
-    ...editForm,
-    [e.target.name]: e.target.value,
-  });
-};
+  const handleEditChange = (e) => {
+    setEditForm({
+      ...editForm,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleUpdateTicket = async (e) => {
     e.preventDefault();
@@ -323,7 +323,13 @@ const handleEditChange = (e) => {
                 {tickets.map((ticket) => (
                   <tr key={ticket.id}>
                     <td>
-                      <strong>{ticket.title}</strong>
+                      <Link
+                        to={`/tickets/${ticket.id}`}
+                        className="ticket-title-link"
+                      >
+                        <strong>{ticket.title}</strong>
+                      </Link>
+
                       <span className="ticket-id">
                         {String(ticket.id).slice(0, 8)}
                       </span>
@@ -359,6 +365,14 @@ const handleEditChange = (e) => {
 
                     <td>
                       <div className="ticket-actions">
+
+                        <Link
+                          to={`/tickets/${ticket.id}`}
+                          className="ticket-chat-button"
+                          title="Open conversation"
+                        >
+                          💬
+                        </Link>
 
                         <button
                           className="ticket-edit-button"

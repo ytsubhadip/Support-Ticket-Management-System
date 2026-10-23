@@ -4,7 +4,9 @@ import {
   Eye,
   Clock3,
   CheckCircle2,
+  MessageCircle,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import api from "../../services/api";
 import "./SupportAgentTickets.css";
 
@@ -38,7 +40,7 @@ function SupportAgentTickets() {
 
       alert(
         error.response?.data?.detail ||
-          "Failed to load assigned tickets"
+        "Failed to load assigned tickets"
       );
     } finally {
       setLoading(false);
@@ -85,7 +87,7 @@ function SupportAgentTickets() {
 
     if (
       String(selectedTicket.status).toLowerCase() ===
-        "closed" &&
+      "closed" &&
       selectedStatus !== "Closed"
     ) {
       alert("Closed tickets cannot be reopened");
@@ -113,7 +115,7 @@ function SupportAgentTickets() {
 
       alert(
         error.response?.data?.detail ||
-          "Failed to update ticket status"
+        "Failed to update ticket status"
       );
     }
   };
@@ -240,15 +242,28 @@ function SupportAgentTickets() {
 
                   {/* Action */}
                   <td>
-                    <button
-                      className="support-view-button"
-                      onClick={() =>
-                        handleOpenTicket(ticket)
-                      }
-                    >
-                      <Eye size={16} />
-                      Update Status
-                    </button>
+                    <div className="support-ticket-actions">
+
+                      <Link
+                        to={`/support/tickets/${ticket.id}`}
+                        className="support-chat-button"
+                        title="Open conversation"
+                      >
+                        <MessageCircle size={16} />
+                        Conversation
+                      </Link>
+
+                      <button
+                        className="support-view-button"
+                        onClick={() =>
+                          handleOpenTicket(ticket)
+                        }
+                      >
+                        <Eye size={16} />
+                        Update Status
+                      </button>
+
+                    </div>
                   </td>
 
                 </tr>
@@ -339,8 +354,8 @@ function SupportAgentTickets() {
                   Open
                 </option>
 
-                <option value="In Progress">
-                  In Progress
+                <option value="In Process">
+                  In Process
                 </option>
 
                 <option value="Closed">
@@ -351,10 +366,10 @@ function SupportAgentTickets() {
               {String(
                 selectedTicket.status
               ).toLowerCase() === "closed" && (
-                <small className="support-closed-message">
-                  Closed tickets cannot be reopened.
-                </small>
-              )}
+                  <small className="support-closed-message">
+                    Closed tickets cannot be reopened.
+                  </small>
+                )}
 
             </div>
 
@@ -376,7 +391,7 @@ function SupportAgentTickets() {
                     selectedTicket.status
                   ).toLowerCase() === "closed" ||
                   selectedStatus ===
-                    selectedTicket.status
+                  selectedTicket.status
                 }
               >
                 <Clock3 size={16} />

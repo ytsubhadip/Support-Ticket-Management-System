@@ -1,50 +1,104 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+
 import Login from "./pages/Login/Login"
-import ProtectRoute from "./components/ProtectRoute"
 import Register from "./pages/Register/Register"
-import Tickets from "./pages/Tickets/Tickets"
-import Navbar from "./components/Navbar"
-import Profile from "./pages/Profile/Profile"
+
+import ProtectRoute from "./components/ProtectRoute"
 import PublicRoute from "./components/PublicRoute"
-import AdminTickets from "./pages/Admin/AdminTickets"
 import RoleRoute from "./components/RoleRoute"
+import SupportAgentRoute from "./components/SupportAgentRoute"
+
+import Navbar from "./components/Navbar"
+
+import Tickets from "./pages/Tickets/Tickets"
+import TicketDetails from "./pages/Tickets/TicketDetails"
+
+import Profile from "./pages/Profile/Profile"
+
+import AdminTickets from "./pages/Admin/AdminTickets"
 import AdminUsers from "./pages/Admin/AdminUsers"
 import AdminDashboard from "./pages/Admin/AdminDashboard"
-import SupportAgentRoute from "./components/SupportAgentRoute"
 
 import SupportAgentTickets from "./pages/Support/SupportAgentTickets"
 import SupportAgentDashboard from "./pages/Support/SupportAgentDashboard"
 
 
 function App() {
-
   return (
     <BrowserRouter>
+
       <Routes>
+
+        {/* =========================
+            PUBLIC ROUTES
+        ========================== */}
+
         <Route element={<PublicRoute />}>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/"
+            element={<Navigate to="/login" replace />}
+          />
+
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+          <Route
+            path="/register"
+            element={<Register />}
+          />
         </Route>
 
+
+        {/* =========================
+            PROTECTED USER ROUTES
+        ========================== */}
 
         <Route element={<ProtectRoute />}>
-          <Route path="/dashboard" element={
-            <>
-              <Navbar />
-              <Tickets />
-            </>
-          } />
-          <Route path="/profile" element={
-            <>
-              <Navbar />
-              <Profile />
-            </>
-          } />
+
+          <Route
+            path="/dashboard"
+            element={
+              <>
+                <Navbar />
+                <Tickets />
+              </>
+            }
+          />
+
+          <Route
+            path="/tickets/:ticketId"
+            element={
+              <>
+                <Navbar />
+                <TicketDetails />
+              </>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <>
+                <Navbar />
+                <Profile />
+              </>
+            }
+          />
+
         </Route>
 
-        <Route element={<RoleRoute allowedRoles={["admin"]} />}>
 
+        {/* =========================
+            ADMIN ROUTES
+        ========================== */}
+
+        <Route
+          element={
+            <RoleRoute allowedRoles={["admin"]} />
+          }
+        >
 
           <Route
             path="/admin"
@@ -72,36 +126,48 @@ function App() {
               <>
                 <Navbar />
                 <AdminUsers />
-
               </>
-
             }
           />
+
         </Route>
 
-        <Route element={<SupportAgentRoute />}>
-          
-            <Route
-              path="/support/dashboard"
-              element={
-              <>
-              <Navbar/>
-              <SupportAgentDashboard />
-              </>
-              }
-            />
 
-            <Route
-              path="/support/tickets"
-              element={
-                <>
-                <Navbar/>
-                <SupportAgentTickets />
-                </>
-              
-            
+        {/* =========================
+            SUPPORT AGENT ROUTES
+        ========================== */}
+
+        <Route element={<SupportAgentRoute />}>
+
+          <Route
+            path="/support/dashboard"
+            element={
+              <>
+                <Navbar />
+                <SupportAgentDashboard />
+              </>
             }
-            />
+          />
+
+          <Route
+            path="/support/tickets"
+            element={
+              <>
+                <Navbar />
+                <SupportAgentTickets />
+              </>
+            }
+          />
+
+          <Route
+            path="/support/tickets/:ticketId"
+            element={
+              <>
+                <Navbar />
+                <TicketDetails />
+              </>
+            }
+          />
 
         </Route>
 
@@ -111,4 +177,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

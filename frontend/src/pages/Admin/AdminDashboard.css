@@ -1,201 +1,217 @@
+/* =========================================
+   Admin Dashboard - Light Theme
+========================================= */
+
 .admin-dashboard-page {
-  min-height: calc(100vh - 70px);
-  background: #f8fafc;
-  padding: 32px;
+  min-height: calc(100vh - 68px);
+  background: var(--bg-page, #f8fafc);
+  padding: 36px 32px 60px;
   box-sizing: border-box;
 }
 
 .admin-dashboard-header {
-  max-width: 1400px;
-  margin: 0 auto 28px;
-
+  max-width: 1360px;
+  margin: 0 auto 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle, #e2e8f0);
 }
 
 .admin-dashboard-header h1 {
   margin: 0;
-
-  color: #172033;
-
+  color: var(--text-main, #0f172a);
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .admin-dashboard-header p {
-  margin: 7px 0 0;
-
-  color: #64748b;
-
+  margin: 6px 0 0;
+  color: var(--text-muted, #64748b);
   font-size: 14px;
 }
 
 .admin-dashboard-refresh {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-
-  padding: 10px 16px;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-
-  background: white;
-  color: #334155;
-
+  padding: 10px 18px;
+  border: 1px solid var(--border-strong, #cbd5e1);
+  border-radius: var(--radius-md, 10px);
+  background: #ffffff;
+  color: var(--text-secondary, #334155);
   font-size: 14px;
   font-weight: 600;
-
   cursor: pointer;
-
-  transition: 0.2s ease;
+  transition: var(--transition, all 0.2s ease);
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(15, 23, 42, 0.05));
 }
 
 .admin-dashboard-refresh:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
+  background: var(--bg-subtle, #f1f5f9);
+  border-color: var(--primary-400, #60a5fa);
+  color: var(--primary-600, #2563eb);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(15, 23, 42, 0.08));
 }
 
-/* =====================================================
-   Task Cards
-   ===================================================== */
+.admin-dashboard-refresh:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   Task Cards Grid
+========================================= */
 
 .admin-task-cards {
-  max-width: 1400px;
+  max-width: 1360px;
   margin: 0 auto;
-
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-
-  gap: 18px;
+  gap: 24px;
 }
 
 .admin-task-card {
   display: flex;
   align-items: center;
+  gap: 20px;
+  padding: 26px 28px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(15, 23, 42, 0.04));
+  transition: var(--transition, all 0.2s ease);
+  position: relative;
+  overflow: hidden;
+}
 
-  gap: 16px;
+.admin-task-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background 0.2s ease;
+}
 
-  padding: 24px;
+.admin-task-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md, 0 8px 16px -2px rgba(15, 23, 42, 0.08));
+  border-color: var(--border-strong, #cbd5e1);
+}
 
-  background: white;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-
-  box-shadow:
-    0 2px 8px rgba(15, 23, 42, 0.04);
+.admin-task-card:hover::before {
+  background: var(--primary-600, #2563eb);
 }
 
 .admin-task-icon {
-  width: 52px;
-  height: 52px;
-
+  width: 58px;
+  height: 58px;
   flex-shrink: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: var(--radius-md, 12px);
+  transition: transform 0.2s ease;
+}
 
-  border-radius: 11px;
+.admin-task-card:hover .admin-task-icon {
+  transform: scale(1.06);
 }
 
 .admin-task-icon.total {
-  background: #eff6ff;
-  color: #2563eb;
+  background: var(--primary-50, #eff6ff);
+  color: var(--primary-600, #2563eb);
+  border: 1px solid var(--primary-200, #bfdbfe);
 }
 
 .admin-task-icon.pending {
-  background: #fff7ed;
-  color: #ea580c;
+  background: var(--orange-bg, #fff7ed);
+  color: var(--orange-text, #c2410c);
+  border: 1px solid var(--orange-border, #fed7aa);
 }
 
 .admin-task-icon.completed {
-  background: #ecfdf5;
-  color: #059669;
+  background: var(--success-bg, #ecfdf5);
+  color: var(--success-text, #047857);
+  border: 1px solid var(--success-border, #a7f3d0);
 }
 
 .admin-task-card span {
   display: block;
-
-  margin-bottom: 5px;
-
-  color: #64748b;
-
+  margin-bottom: 6px;
+  color: var(--text-muted, #64748b);
   font-size: 13px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .admin-task-card strong {
   display: block;
-
-  color: #172033;
-
-  font-size: 30px;
-  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
-/* =====================================================
+/* =========================================
    Loading
-   ===================================================== */
+========================================= */
 
 .admin-dashboard-loading {
   min-height: 50vh;
-
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  gap: 10px;
-
-  color: #64748b;
-
+  gap: 14px;
+  color: var(--text-muted, #64748b);
   font-size: 15px;
+  font-weight: 500;
 }
 
 .admin-dashboard-spinner {
-  animation: adminDashboardSpin 1s linear infinite;
+  color: var(--primary-600, #2563eb);
+  animation: adminDashboardSpin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes adminDashboardSpin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-/* =====================================================
+/* =========================================
    Responsive
-   ===================================================== */
+========================================= */
 
-@media (max-width: 800px) {
-  .admin-dashboard-page {
-    padding: 24px 18px;
-  }
-
+@media (max-width: 960px) {
   .admin-task-cards {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
   .admin-dashboard-page {
-    padding: 20px 12px;
+    padding: 24px 18px 40px;
   }
+}
 
+@media (max-width: 600px) {
   .admin-dashboard-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 16px;
   }
 
   .admin-dashboard-header h1 {
-    font-size: 23px;
+    font-size: 24px;
   }
 
   .admin-dashboard-refresh {
