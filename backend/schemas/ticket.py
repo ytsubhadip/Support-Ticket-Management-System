@@ -72,7 +72,7 @@ class TicketMessageResponse(BaseModel):
 
 class TicketMessageAttachmentResponse(BaseModel):
     id:UUID
-    message_id: UUID
+    ticket_id: UUID
     filename: str
     mime_type:str
     file_size:int

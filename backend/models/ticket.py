@@ -19,7 +19,7 @@ class Ticket(Base):
             name="check_ticket_priority"
         ),
         CheckConstraint(
-            "status IN ('Open', 'In Progress', 'Wating fot User', 'Resoled','Closed')",
+            "status IN ('Open', 'In Process', 'Wating fot User', 'Resoled','Closed')",
             name="check_ticket_status"
         ),
           )
@@ -117,9 +117,9 @@ class TicketMessageAttachment(Base):
         primary_key=True,
         default=uuid.uuid4
     )
-    message_id = Column(
+    ticket_id = Column(
         Uuid(as_uuid=True),
-        ForeignKey("ticket_messages.id", ondelete="CASCADE"),
+        ForeignKey("tickets.id", ondelete="CASCADE"),
         nullable=False,
         index=True
     )
