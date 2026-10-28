@@ -3,12 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 from models.user import User
 from models.ticket import Ticket
+from models.notification import Notification
 from utils.auth import get_current_user, require_roles
 
 from routes.auth import router as auth_route
 from routes.tickets import router as ticket_route
 from routes.users import router as users
 from routes.ticket_message import router as ticket_message
+from routes.notification import router as notification_user
 
 
 app = FastAPI(title="Helpdesk Ticket Management System",
@@ -35,6 +37,7 @@ app.include_router(auth_route)
 app.include_router(ticket_route)
 app.include_router(users)
 app.include_router(ticket_message)
+app.include_router(notification_user)
 
 @app.get("/")
 def root():

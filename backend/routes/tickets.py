@@ -11,6 +11,7 @@ from models.ticket import Ticket
 from schemas.ticket import TicketCreate, TicketResponse, TicketUpdate, TicketStatusUpdate
 
 from utils.auth import get_current_user, require_roles
+from worker.tasks import create_ticket_notification
 
 router = APIRouter(
     prefix="/api/v1/tickets",
@@ -74,6 +75,13 @@ async def create_ticket(
     db.add(ticket)
     db.commit()
     db.refresh(ticket)
+
+    create_ticket_notification.delay(
+        str(ticket.id),
+        str(current_user.id),
+        str(current_user.email),
+        str(ticket.title)
+    )
 
     return ticket
 
