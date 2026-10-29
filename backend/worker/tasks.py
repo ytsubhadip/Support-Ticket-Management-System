@@ -4,6 +4,7 @@ import os
 from worker.celery_app import celery_app
 from database import SessionLocal
 from models.notification import Notification
+from models.ticket import Ticket
 from utils.email_service import send_email
 from dotenv import load_dotenv
 from models.user import User

@@ -79,8 +79,8 @@ async def create_ticket(
     create_ticket_notification.delay(
         str(ticket.id),
         str(current_user.id),
-        str(current_user.email),
-        str(ticket.title)
+        current_user.email,
+        ticket.title
     )
 
     return ticket
