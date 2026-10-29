@@ -106,4 +106,105 @@ def create_ticket_notification(
         )
 
     return f"Notifications saved and emails sent for ticket {ticket_id}"
-        
+
+@celery_app.task
+def send_agent_assignment_email(
+    ticket_id: str,
+    ticket_title: str,
+    agent_id: str,
+    agent_email: str,
+):
+    # Save an in-app notification for the assigned agent
+    db = SessionLocal()
+
+    try:
+        notification = Notification(
+            recipient_id=uuid.UUID(agent_id),
+            ticket_id=uuid.UUID(ticket_id),
+            type="ticket_assigned",
+            title="New Ticket Assigned",
+            message=(
+                f"Ticket '{ticket_title}' has been assigned to you. "
+                f"Ticket ID: {ticket_id}. "
+                "Please review and respond to the ticket."
+            ),
+            is_read=False,
+        )
+
+        db.add(notification)
+        db.commit()
+
+    except Exception:
+        db.rollback()
+        raise
+
+    finally:
+        db.close()
+
+    # Send assignment email
+    send_email(
+        to_email=agent_email,
+        subject=f"New Ticket Assigned: {ticket_title}",
+        body=(
+            "Hello Support Agent,\n\n"
+            "A support ticket has been assigned to you.\n\n"
+            f"Ticket ID: {ticket_id}\n"
+            f"Ticket Title: {ticket_title}\n\n"
+            "Please log in to the Support Ticket Management System "
+            "to review the ticket and respond to the user.\n\n"
+            "Thank you."
+        ),
+    )
+
+    return f"Assignment notification sent for ticket {ticket_id}"
+
+
+@celery_app.task
+def notify_user_agent_replied(
+    ticket_id: str,
+    user_id: str,
+    user_email: str,
+    ticket_title: str,
+):
+    db = SessionLocal()
+
+    try:
+        notification = Notification(
+            recipient_id=uuid.UUID(user_id),
+            ticket_id=uuid.UUID(ticket_id),
+            type="agent_reply",
+            title="Support Agent Replied",
+            message=(
+                f"An agent has replied to your ticket "
+                f"'{ticket_title}'. Ticket ID: {ticket_id}. "
+                "Please log in to view the reply."
+            ),
+            is_read=False,
+        )
+
+        db.add(notification)
+        db.commit()
+
+    except Exception:
+        db.rollback()
+        raise
+
+    finally:
+        db.close()
+
+    # Email the ticket creator
+    send_email(
+        to_email=user_email,
+        subject=f"New Reply to Your Ticket: {ticket_title}",
+        body=(
+            "Hello,\n\n"
+            "A support agent has replied to your ticket.\n\n"
+            f"Ticket ID: {ticket_id}\n"
+            f"Ticket Title: {ticket_title}\n\n"
+            "Please log in to your Support Ticket Management System "
+            "to view the reply and continue the conversation.\n\n"
+            "Thank you."
+        ),
+    )
+
+    return f"User notified about agent reply on ticket {ticket_id}"

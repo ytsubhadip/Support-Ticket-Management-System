@@ -8,10 +8,11 @@ from database import get_db
 from models.user import User
 from models.ticket import Ticket
 
+
 from schemas.ticket import TicketCreate, TicketResponse, TicketUpdate, TicketStatusUpdate
 
 from utils.auth import get_current_user, require_roles
-from worker.tasks import create_ticket_notification
+from worker.tasks import create_ticket_notification, send_agent_assignment_email
 
 router = APIRouter(
     prefix="/api/v1/tickets",
@@ -331,6 +332,13 @@ async def assign_ticket(
     ticket.assigned_to = agent.id
     db.commit()
     db.refresh(ticket)
+
+    send_agent_assignment_email(
+        str(ticket.id),
+        str(ticket.title),
+        str(agent.id),
+        str(agent.email)
+    )
     return ticket
 
 # delete ticket Admin only
