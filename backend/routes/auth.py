@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
@@ -12,12 +12,14 @@ from utils.rate_limiter import limiter
 
 router = APIRouter(prefix="/api/v1/auth", tags=["Authentiaction"])
 
+
+# registration route
 @router.post("/register", 
              response_model=UserResponse, 
              status_code=status.HTTP_201_CREATED
              )
-
-async def user_register(user_data: UserCreate, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+async def user_register(request:Request, response:Response ,user_data: UserCreate, db: Session = Depends(get_db)):
     email = user_data.email.lower()
 
     existing_user = db.query(User).filter(User.email == email).first()
@@ -55,9 +57,10 @@ async def user_register(user_data: UserCreate, db: Session = Depends(get_db)):
     )
 
 
+# login routee
 @router.post("/login")
 @limiter.limit("5/minute")
-async def user_login( request: Request,user_data: UserLogin,db:Session =Depends(get_db)):
+async def user_login( request: Request,response:Response,user_data: UserLogin,db:Session =Depends(get_db)):
 
     user = db.query(User).filter(User.email == user_data.email).first()
 

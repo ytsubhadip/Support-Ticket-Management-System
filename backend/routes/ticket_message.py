@@ -1,7 +1,7 @@
 from uuid import UUID
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Request, Response
 from sqlalchemy.orm import Session
 from fastapi.responses import FileResponse
 
@@ -11,6 +11,7 @@ from models.user import User
 from schemas.ticket import TicketMessageCreate, TicketMessageResponse, TicketMessageAttachmentResponse
 from utils.auth import get_current_user
 from services.file_storage import save_ticket_message_file
+from utils.rate_limiter import limiter
 
 
 router = APIRouter(
@@ -23,7 +24,10 @@ router = APIRouter(
     "/{ticket_id}/messages",
     response_model=TicketMessageResponse
 )
+@limiter.limit("30/minute")
 async def create_ticket_message(
+    request: Request,
+    response: Response,
     ticket_id:UUID,
     data:TicketMessageCreate,
     db:Session=Depends(get_db),

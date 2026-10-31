@@ -1,13 +1,14 @@
 from uuid import UUID
 from typing import Literal
 
-from fastapi import APIRouter, HTTPException, Depends, Query, status
+from fastapi import APIRouter, HTTPException, Depends, Query, status, Request, Response
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from database import get_db
 from models.user import User
 from models.ticket import Ticket
 
+from utils.rate_limiter import limiter
 
 from schemas.ticket import TicketCreate, TicketResponse, TicketUpdate, TicketStatusUpdate
 
@@ -54,7 +55,10 @@ def get_accessible_ticket(
 
 # create a ticket
 @router.post("/")
+@limiter.limit("10/minute")
 async def create_ticket(
+    request:Request,
+    response:Response,
     ticket_data : TicketCreate,
     db : Session = Depends(get_db),
     current_user : User = Depends(get_current_user)
