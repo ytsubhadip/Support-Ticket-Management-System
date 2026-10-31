@@ -12,12 +12,24 @@ from routes.users import router as users
 from routes.ticket_message import router as ticket_message
 from routes.notification import router as notification_user
 
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+
+from utils.rate_limiter import limiter
+
 
 app = FastAPI(title="Helpdesk Ticket Management System",
               swagger_ui_parameters={
                   "persistAuthorization": True
               })
 
+
+# config slow api
+app.state.limiter = limiter
+app.add_exception_handler(
+    RateLimitExceeded,
+    _rate_limit_exceeded_handler,
+)
 
 app.add_middleware(
     CORSMiddleware,
