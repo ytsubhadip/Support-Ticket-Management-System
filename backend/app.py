@@ -1,10 +1,15 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
+
 from models.user import User
 from models.ticket import Ticket
 from models.notification import Notification
+from models.audit_log import AuditLog
+
 from utils.auth import get_current_user, require_roles
+from utils.rate_limiter import limiter
+from utils.audit_logger import create_audit_log
 
 from routes.auth import router as auth_route
 from routes.tickets import router as ticket_route
@@ -15,7 +20,7 @@ from routes.notification import router as notification_user
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
-from utils.rate_limiter import limiter
+
 
 
 app = FastAPI(title="Helpdesk Ticket Management System",

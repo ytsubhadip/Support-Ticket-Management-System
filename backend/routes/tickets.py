@@ -9,6 +9,7 @@ from models.user import User
 from models.ticket import Ticket
 
 from utils.rate_limiter import limiter
+from utils.audit_logger import create_audit_log
 
 from schemas.ticket import TicketCreate, TicketResponse, TicketUpdate, TicketStatusUpdate
 
@@ -237,6 +238,7 @@ async def update_ticket(
     response_model=TicketResponse
 )
 async def update_ticket_status(
+    request: Request,
     ticket_id : UUID,
     status_data: TicketStatusUpdate,
     db:Session = Depends(get_db),
@@ -257,7 +259,7 @@ async def update_ticket_status(
             status_code= status.HTTP_403_FORBIDDEN,
             detail="Only the assigned agent or an admin can change ticket status"
         )
-
+    old_status = ticket.status
     new_status = status_data.status
 
     if str(ticket.status) == "Closed":
@@ -273,6 +275,24 @@ async def update_ticket_status(
         )
 
     ticket.status = new_status
+
+    if old_status != new_status:
+
+        create_audit_log(
+            db=db,
+            user_id=current_user.id,
+            action="TICKET_STATUS_CHANGED",
+            object_type="Ticket",
+            object_id=ticket.id,
+            old_value={
+                "status": old_status
+            },
+            new_value={
+                "status": new_status
+            },
+            ip_address=request.client.host if request.client else None
+        )
+        
     db.commit()
 
     db.refresh(ticket)
@@ -285,6 +305,7 @@ async def update_ticket_status(
     response_model=TicketResponse
     )
 async def assign_ticket(
+    request: Request,
     ticket_id :UUID,
     agent_id: UUID,
     db : Session = Depends(get_db),
@@ -333,7 +354,24 @@ async def assign_ticket(
             detail="Closed ticket cannot assigned"
         )
 
-    ticket.assigned_to = agent.id
+    old_agent_id = ticket.assigned_to
+  
+
+    create_audit_log(
+    db=db,
+    user_id=current_user.id,
+    action="TICKET_ASSIGNED" if old_agent_id is None else "TICKET_REASSIGNED",
+    object_type="Ticket",
+    object_id=ticket.id,
+    old_value={
+        "assigned_agent": str(old_agent_id) if old_agent_id is not None else None
+    },
+    new_value={
+        "assigned_agent": str(agent.id)
+    },
+    ip_address=request.client.host if request.client else None
+)
+
     db.commit()
     db.refresh(ticket)
 
