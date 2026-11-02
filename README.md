@@ -1,801 +1,369 @@
-# Support Ticket Management System
+﻿# Support Ticket Management System
 
-A full-stack Support Ticket Management System for managing customer
-support requests, ticket conversations, assignments, notifications,
-attachments, role-based access control, and administrative operations.
+A full-stack help desk and ticketing platform built with FastAPI on the backend and React on the frontend. The project is designed for a support workflow where users raise issues, support agents resolve assigned tickets, and administrators manage users, tickets, notifications, and overall platform operations.
 
-## 1. Project Overview
+## Overview
 
-The system supports three main roles:
+This application includes:
 
--   **User** --- creates and manages support tickets.
--   **Support Agent** --- handles assigned tickets and communicates with
-    users.
--   **Admin** --- manages users, tickets, assignments, statistics, and
-    audit logs.
+- User registration and login
+- JWT-based authentication
+- Role-based access control for users, support agents, and admins
+- Ticket creation, viewing, filtering, and assignment
+- Ticket status updates and message history
+- File attachments for tickets
+- In-app notifications and email alerts
+- Admin controls for user role and status management
+- Background job processing using Celery and Redis
+- Docker Compose setup for running the whole stack
 
-### Main Features
+## Roles
 
--   User registration and login
--   JWT authentication
--   Role-based access control
--   User profile management
--   Support ticket creation
--   Ticket assignment and reassignment
--   Ticket priority and status management
--   Ticket conversations
--   File attachments
--   Notifications
--   Background tasks
--   Search, filtering, and pagination
--   Audit logging
--   Admin operations
--   Automated tests
--   Swagger/OpenAPI documentation
--   Docker and Docker Compose support
+### User
+- Create and manage their own support tickets
+- View ticket history and ticket conversations
+- Receive updates and notifications
+- Upload attachments to tickets
 
-## 2. Technology Stack
+### Support Agent
+- View assigned tickets
+- Update ticket status and respond to ticket messages
+- Resolve or escalate tickets assigned to them
+
+### Admin
+- View all users and tickets
+- Assign support agents to tickets
+- Manage user roles and account status
+- Monitor platform activity and support workflows
+
+## Technology Stack
 
 ### Backend
-
--   Python 3.11+
--   FastAPI
--   SQLAlchemy
--   Pydantic
--   PostgreSQL
--   Psycopg
--   JWT Authentication
--   Celery
--   Redis
--   Uvicorn
+- Python 3.11+
+- FastAPI
+- SQLAlchemy
+- PostgreSQL
+- Pydantic
+- JWT authentication
+- Celery
+- Redis
+- Uvicorn
 
 ### Frontend
+- React
+- Vite
+- React Router
+- Axios
+- CSS Modules / custom CSS
 
--   React.js
--   JavaScript
--   HTML5
--   CSS3
--   REST API
+### Infrastructure
+- Docker
+- Docker Compose
+- Nginx (frontend container)
 
-### Testing and Development
+## Project Structure
 
--   Pytest
--   FastAPI TestClient
--   Docker
--   Docker Compose
--   Git
-
-### API Documentation
-
--   Swagger UI
--   OpenAPI
--   ReDoc
--   Postman
-
-## 3. Project Structure
-
-``` text
+```text
 Support-Ticket-Management-System/
+├── .env
+├── README.md
+├── docker-compose.yml
 ├── backend/
-│   ├── main.py
+│   ├── app.py
+│   ├── database.py
 │   ├── requirements.txt
-│   ├── .env
-│   ├── .env.example
-│   ├── database/
 │   ├── models/
-│   ├── schemas/
+│   │   ├── audit_log.py
+│   │   ├── notification.py
+│   │   ├── ticket.py
+│   │   └── user.py
 │   ├── routes/
+│   │   ├── auth.py
+│   │   ├── notification.py
+│   │   ├── ticket_message.py
+│   │   ├── tickets.py
+│   │   └── users.py
+│   ├── schemas/
+│   │   ├── notification.py
+│   │   ├── ticket.py
+│   │   └── user.py
 │   ├── services/
 │   ├── utils/
-│   ├── tests/
-│   └── migrations/
+│   │   ├── auth.py
+│   │   ├── audit_logger.py
+│   │   ├── email_service.py
+│   │   ├── rate_limiter.py
+│   │   └── security.py
+│   ├── worker/
+│   │   ├── __init__.py
+│   │   ├── celery_app.py
+│   │   └── tasks.py
+│   └── uploads/
+│       └── tickets/
 ├── frontend/
+│   ├── Dockerfile
 │   ├── package.json
+│   ├── vite.config.js
+│   ├── index.html
+│   ├── nginx.conf
 │   ├── public/
 │   └── src/
+│       ├── App.jsx
+│       ├── main.jsx
+│       ├── index.css
+│       ├── assets/
 │       ├── components/
 │       ├── pages/
-│       ├── services/
-│       ├── context/
-│       └── hooks/
-├── docker-compose.yml
-├── Dockerfile
-├── .env.example
-├── .gitignore
-├── README.md
-└── postman/
-    └── Support-Ticket-Management-System.postman_collection.json
+│       └── services/
+└── docker-compose.yml
 ```
 
-## 4. Installation
+## Core Features
 
-### Prerequisites
+### Authentication and Access Control
+- Register and log in users
+- Generate JWT access tokens
+- Restrict endpoints by role
+- Prevent inactive users from accessing protected routes
 
-Install the following for local development:
+### Ticket Management
+- Create tickets with title, description, category, priority, and status
+- View tickets by role and access permissions
+- Filter by category, priority, and status
+- Assign tickets to support agents
+- Update ticket state as work progresses
 
--   Python 3.11+
--   Node.js 18+
--   npm
--   PostgreSQL
--   Redis
--   Git
+### Conversations and Communication
+- Ticket comments/messages
+- Support-agent replies and user dialogue flow
+- Notification generation for ticket events
+- Optional email notifications for ticket creation and assignment
 
-Docker users only need Docker and Docker Compose.
+### Admin Operations
+- List users
+- Activate/deactivate users
+- Update user roles
+- Assign support agents to new or existing tickets
+- Review administrative workflows
 
-### Clone the Repository
+### Background Processing
+- Redis-backed task queue
+- Celery workers for notification and email jobs
+- Non-blocking asynchronous updates for support communication
 
-``` bash
-git clone <repository-url>
+## Default Application Ports
+
+- Frontend (React/Vite dev): http://localhost:5173
+- Frontend (Docker): http://localhost:3000
+- Backend API: http://localhost:8000
+- Swagger UI: http://localhost:8000/docs
+- PostgreSQL: localhost:5432
+- Redis: localhost:6379
+
+## Prerequisites
+
+Before running the project locally, install:
+
+- Python 3.11+
+- Node.js 18+
+- npm
+- PostgreSQL
+- Redis
+- Git
+
+## Environment Setup
+
+Create a root `.env` file for the project and configure the required values:
+
+```env
+# PostgreSQL
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=helpdesk_db
+
+# Backend
+DATABASE_URL=postgresql://postgres:your_password@localhost:5432/helpdesk_db
+SECRET_KEY=replace_with_a_secure_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Redis
+REDIS_URL=redis://redis:6379/0
+CELERY_BROKER_URL=redis://redis:6379/0
+CELERY_RESULT_BACKEND=redis://redis:6379/1
+
+# Email configuration
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+EMAIL=your_email@example.com
+EMAIL_PASSWORD=your_email_app_password
+ADMIN_EMAIL=admin@example.com
+
+# Frontend
+VITE_API_URL=http://localhost:8000/api/v1
+```
+
+Notes:
+- Do not commit real secrets to the repository.
+- The backend reads values from this `.env` file during startup.
+- For Gmail, use an app password if 2FA is enabled.
+
+## Local Development Setup
+
+### 1) Clone the repository
+
+```bash
+git clone https://github.com/ytsubhadip/Support-Ticket-Management-System.git
 cd Support-Ticket-Management-System
 ```
 
-### Backend Setup
+### 2) Backend setup
 
-``` bash
+```bash
 cd backend
 python -m venv .venv
 ```
 
-Windows:
+On Windows:
 
-``` bash
+```powershell
 .venv\Scripts\activate
 ```
 
-Linux/macOS:
+On Linux/macOS:
 
-``` bash
+```bash
 source .venv/bin/activate
 ```
 
 Install dependencies:
 
-``` bash
+```bash
 pip install -r requirements.txt
 ```
 
-### Frontend Setup
+Run the backend:
 
-``` bash
-cd frontend
+```bash
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
+```
+
+### 3) Frontend setup
+
+```bash
+cd ../frontend
 npm install
-```
-
-## 5. Environment Variables
-
-Create a `.env` file in the backend directory using `.env.example` as a
-reference.
-
-Example:
-
-``` env
-APP_NAME=Support Ticket Management System
-APP_ENV=development
-DEBUG=True
-
-DATABASE_URL=postgresql+psycopg://postgres:password@localhost:5432/support_ticket_db
-
-SECRET_KEY=change-this-secret-key
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-REDIS_URL=redis://localhost:6379/0
-
-CELERY_BROKER_URL=redis://localhost:6379/0
-CELERY_RESULT_BACKEND=redis://localhost:6379/0
-
-FRONTEND_URL=http://localhost:5173
-
-SMTP_HOST=
-SMTP_PORT=
-SMTP_USERNAME=
-SMTP_PASSWORD=
-SMTP_FROM_EMAIL=
-```
-
-Do not commit real credentials or secrets to Git.
-
-## 6. Database Setup
-
-The application uses PostgreSQL.
-
-Create the database:
-
-``` sql
-CREATE DATABASE support_ticket_db;
-```
-
-Configure the connection in `.env`:
-
-``` env
-DATABASE_URL=postgresql+psycopg://postgres:password@localhost:5432/support_ticket_db
-```
-
-If Alembic migrations are configured, run:
-
-``` bash
-alembic upgrade head
-```
-
-Main database entities include:
-
--   Users
--   Roles
--   Tickets
--   Ticket Messages
--   Attachments
--   Notifications
--   Audit Logs
--   Ticket Assignments
-
-## 7. Running the Application
-
-### Backend
-
-From the `backend` directory:
-
-``` bash
-uvicorn main:app --reload
-```
-
-Backend:
-
-``` text
-http://localhost:8000
-```
-
-### Frontend
-
-From the `frontend` directory:
-
-``` bash
 npm run dev
 ```
 
-Frontend:
+The frontend will run on:
 
-``` text
+```text
 http://localhost:5173
 ```
 
-## 8. Running with Docker
+## Running with Docker Compose
 
-Start the complete application:
+From the project root, run:
 
-``` bash
+```bash
 docker compose up -d --build
 ```
 
-Check services:
+This starts:
 
-``` bash
+- PostgreSQL database
+- Redis cache
+- FastAPI backend
+- Celery worker
+- React frontend
+
+Check the running services:
+
+```bash
 docker compose ps
 ```
 
 View logs:
 
-``` bash
+```bash
 docker compose logs -f
 ```
 
-Stop the application:
+Stop the stack:
 
-``` bash
+```bash
 docker compose down
 ```
 
-Remove containers and volumes:
+To remove volumes as well:
 
-``` bash
+```bash
 docker compose down -v
 ```
 
-Typical services:
+## API Overview
 
-``` text
-Frontend
-   |
-   v
-FastAPI Backend
-   |
-   +---- PostgreSQL
-   |
-   +---- Redis
-            |
-            v
-       Celery Worker
-```
-
-## 9. Running Tests
-
-From the backend directory:
-
-``` bash
-pytest
-```
-
-Verbose output:
-
-``` bash
-pytest -v
-```
-
-Run a specific test file:
-
-``` bash
-pytest tests/test_auth.py
-```
-
-Run tests by keyword:
-
-``` bash
-pytest -k authorization
-```
-
-Tests should cover authentication, authorization, ticket management,
-validation, attachments, security, and important edge cases.
-
-## 10. API Documentation
-
-When the backend is running:
-
-### Swagger UI
-
-``` text
-http://localhost:8000/docs
-```
-
-### ReDoc
-
-``` text
-http://localhost:8000/redoc
-```
-
-### OpenAPI Schema
-
-``` text
-http://localhost:8000/openapi.json
-```
-
-Swagger/OpenAPI is the authoritative source for the exact API request
-and response schemas.
-
-## 11. Main API Modules
+The backend exposes REST APIs under the `/api/v1` prefix.
 
 ### Authentication
-
-``` http
+```http
 POST /api/v1/auth/register
 POST /api/v1/auth/login
-POST /api/v1/auth/logout
-POST /api/v1/auth/change-password
-POST /api/v1/auth/forgot-password
-POST /api/v1/auth/reset-password
 ```
 
 ### Users
-
-``` http
-GET /api/v1/users/me
-PUT /api/v1/users/me
+```http
 GET /api/v1/users/
+GET /api/v1/users/support-agents
+PATCH /api/v1/users/{user_id}/status
+PATCH /api/v1/users/{user_id}/role
 ```
 
 ### Tickets
-
-``` http
-GET    /api/v1/tickets/
-POST   /api/v1/tickets/
-GET    /api/v1/tickets/{ticket_id}
-PUT    /api/v1/tickets/{ticket_id}
-DELETE /api/v1/tickets/{ticket_id}
-```
-
-### Ticket Messages
-
-``` http
-GET  /api/v1/tickets/{ticket_id}/messages/
-POST /api/v1/tickets/{ticket_id}/messages/
-```
-
-### Attachments
-
-``` http
-POST /api/v1/tickets/{ticket_id}/attachments/
-GET  /api/v1/tickets/{ticket_id}/attachments/
-```
-
-### Assignment
-
-``` http
-POST /api/v1/tickets/{ticket_id}/assign/
+```http
+GET /api/v1/tickets/
+POST /api/v1/tickets/
+GET /api/v1/tickets/{ticket_id}
+PATCH /api/v1/tickets/{ticket_id}
+PATCH /api/v1/tickets/{ticket_id}/status
+GET /api/v1/tickets/assigned
 ```
 
 ### Notifications
-
-``` http
+```http
 GET /api/v1/notifications/
-POST /api/v1/notifications/{notification_id}/read
 ```
 
-### Admin
-
-``` http
-GET /api/v1/admin/users/
-GET /api/v1/admin/tickets/
-GET /api/v1/admin/statistics/
-GET /api/v1/admin/agents/workload/
+### API Docs
+```text
+http://localhost:8000/docs
+http://localhost:8000/redoc
 ```
 
-### Audit Logs
+## Example Workflow
 
-``` http
-GET /api/v1/audit-logs/
+```text
+1. User registers and logs in
+2. User creates a support ticket
+3. Admin reviews the ticket and assigns a support agent
+4. Support agent receives the assignment and updates the ticket
+5. User and agent continue the conversation through ticket messages
+6. Agent resolves the issue and updates the ticket status
+7. Notification emails and in-app alerts are triggered automatically
 ```
 
-The exact routes available in the running application should be verified
-through Swagger/OpenAPI.
+## Notes
 
-## 12. Authentication
+- The backend uses SQLAlchemy models and PostgreSQL by default.
+- Background work such as email and notification generation is handled by Celery with Redis.
+- The frontend is a React-based portal with role-protected pages for different user types.
+- The application is intended for local development and container-based deployment, with additional production hardening recommended before public deployment.
 
-Protected endpoints require a JWT access token.
+## License
 
-``` http
-Authorization: Bearer <access_token>
-```
+This project is currently distributed without a formal license declaration in the repository. If you plan to share or publish it externally, add an appropriate license file before distribution.
 
-The backend validates authentication and role permissions for protected
-resources.
+## Support
 
-## 13. Role-Based Access Control
-
-  Operation                User   Agent   Admin
-  ----------------------- ------ ------- -------
-  Create Ticket            Yes     Yes     Yes
-  View Own Tickets         Yes     No      Yes
-  View Assigned Tickets     No     Yes     Yes
-  Reply to Ticket          Yes     Yes     Yes
-  Assign Ticket             No     No      Yes
-  Reassign Ticket           No     No      Yes
-  Change Priority           No     No      Yes
-  View All Users            No     No      Yes
-  View Audit Logs           No     No      Yes
-  View Agent Workload       No     No      Yes
-
-## 14. Ticket Management
-
-Tickets contain:
-
--   Ticket ID
--   Title
--   Description
--   Category
--   Priority
--   Status
--   Created By
--   Assigned Agent
--   Created At
--   Updated At
-
-### Categories
-
--   Technical
--   Billing
--   Account
--   Subscription
--   Other
-
-### Priorities
-
--   Low
--   Medium
--   High
--   Urgent
-
-### Statuses
-
--   Open
--   In Progress
--   Waiting for User
--   Resolved
--   Closed
-
-### Ticket Workflow
-
-``` text
-User Creates Ticket
-        |
-        v
-      Open
-        |
-        v
-Admin Assigns Agent
-        |
-        v
-   In Progress
-        |
-        v
-Agent/User Conversation
-        |
-        v
- Waiting for User
-        |
-        v
-Agent Resolves Ticket
-        |
-        v
-     Resolved
-        |
-        v
-      Closed
-```
-
-## 15. Search, Filtering and Pagination
-
-Ticket APIs support search, filtering, sorting, and pagination where
-implemented.
-
-Typical filters include:
-
--   Status
--   Priority
--   Category
--   Assigned Agent
--   User
--   Created Date
-
-Example:
-
-``` http
-GET /api/v1/tickets/?status=open&priority=high&page=1&page_size=20
-```
-
-## 16. Notifications
-
-Notifications can be generated for important events such as:
-
--   Ticket creation
--   Ticket assignment
--   Ticket reassignment
--   New ticket message
--   Ticket status changes
--   Ticket resolution
-
-Background processing can be used for email and other asynchronous
-notification operations.
-
-## 17. Celery and Redis
-
-Redis is used for Celery background processing.
-
-Example:
-
-``` text
-FastAPI
-   |
-   v
- Redis
-   |
-   v
-Celery Worker
-   |
-   +---- Notifications
-   +---- Email
-   +---- Background Tasks
-```
-
-Start the worker according to the Celery configuration used by the
-project.
-
-## 18. File Attachments
-
-Ticket attachments are validated for:
-
--   File type
--   File size
--   File name
--   User authorization
-
-Unauthorized users must not be able to access another user's
-attachments.
-
-## 19. Audit Logging
-
-Important security-sensitive operations can be recorded in audit logs.
-
-Examples:
-
--   Ticket assignment
--   Ticket reassignment
--   Ticket status changes
--   Ticket priority changes
--   Password changes
--   Administrative operations
-
-Audit records can contain:
-
-``` text
-User
-Action
-Object Type
-Object ID
-Old Value
-New Value
-IP Address
-Timestamp
-```
-
-## 20. API Security
-
-The application uses:
-
--   JWT authentication
--   Password hashing
--   Role-based authorization
--   Request validation
--   Protected resources
--   Secure attachment handling
--   Rate limiting
--   Environment-based secrets
--   Audit logging
-
-Common API error responses include:
-
-``` text
-400 Bad Request
-401 Unauthorized
-403 Forbidden
-404 Not Found
-409 Conflict
-422 Validation Error
-429 Too Many Requests
-500 Internal Server Error
-```
-
-## 21. Postman
-
-The Postman collection should contain the major APIs.
-
-Recommended groups:
-
-``` text
-Support Ticket Management
-├── Authentication
-├── Users
-├── Tickets
-├── Messages
-├── Attachments
-├── Admin
-└── Audit Logs
-```
-
-Collection location:
-
-``` text
-postman/Support-Ticket-Management-System.postman_collection.json
-```
-
-## 22. Git and Development
-
-Recommended branches:
-
-``` text
-main
-development
-feature/<feature-name>
-```
-
-Example:
-
-``` bash
-git checkout development
-git checkout -b feature/ticket-assignment
-```
-
-Use meaningful commit messages:
-
-``` text
-feat: add ticket assignment API
-fix: validate ticket category
-test: add authorization tests
-docs: update API documentation
-```
-
-## 23. Security and Production Considerations
-
-Before production deployment:
-
--   Enable HTTPS.
--   Use strong secrets.
--   Disable debug mode.
--   Use secure database credentials.
--   Configure secure CORS.
--   Protect Redis.
--   Configure secure file storage.
--   Configure SMTP securely.
--   Back up PostgreSQL.
--   Monitor background workers.
--   Configure application logging.
--   Keep dependencies updated.
--   Never expose `.env` files.
-
-## 24. Known Limitations
-
--   Email notifications require SMTP configuration.
--   Background tasks require Redis and Celery.
--   File storage configuration may differ between development and
-    production.
--   Production deployment requires additional infrastructure
-    configuration.
--   Exact API routes should be verified against the generated OpenAPI
-    documentation.
--   Environment variables may change as the implementation evolves.
-
-## 25. Final Demo Flow
-
-``` text
-User Login
-    |
-    v
-Create Support Ticket
-    |
-    v
-Admin Views Ticket
-    |
-    v
-Admin Assigns Ticket
-    |
-    v
-Agent Views Ticket
-    |
-    v
-Agent Responds
-    |
-    v
-User Receives Notification
-    |
-    v
-User Uploads Attachment
-    |
-    v
-Agent Continues Conversation
-    |
-    v
-Agent Resolves Ticket
-    |
-    v
-Admin Reviews Ticket History
-    |
-    v
-Admin Reviews Audit Logs
-    |
-    v
-Admin Reviews Statistics
-    |
-    v
-Admin Reviews Agent Workload
-```
-
-## 26. Status
-
-**Project:** Support Ticket Management System
-
-**Backend:** FastAPI
-
-**Frontend:** React
-
-**Database:** PostgreSQL
-
-**ORM:** SQLAlchemy
-
-**Authentication:** JWT
-
-**Background Processing:** Celery + Redis
-
-**API Documentation:** Swagger/OpenAPI
-
-**Testing:** Pytest
-
-**Containerization:** Docker Compose
-
-**Status:** Development / Production-Ready Project
+For setup issues, backend problems, or environment variable questions, check the project files and the generated Swagger docs at `/docs` once the backend is running.
